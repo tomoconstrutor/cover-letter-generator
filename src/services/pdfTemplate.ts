@@ -152,57 +152,7 @@ export class PDFTemplateService {
     return startY + 15;
   }
 
-  /**
-   * Adds recipient information block
-   */
-  private addRecipientInfo(doc: jsPDF, config: TemplateConfig, metadata: CoverLetterData['metadata'], startY: number): number {
-    let currentY = startY;
 
-    if (metadata.hiringManager || metadata.company) {
-      if (metadata.hiringManager) {
-        doc.text(metadata.hiringManager, config.margins.left, currentY);
-        currentY += 5;
-      }
-
-      if (metadata.company) {
-        doc.text(metadata.company, config.margins.left, currentY);
-        currentY += 5;
-      }
-
-      if (metadata.location) {
-        doc.text(metadata.location, config.margins.left, currentY);
-        currentY += 5;
-      }
-
-      currentY += 10;
-    }
-
-    return currentY;
-  }
-
-  /**
-   * Adds job reference line
-   */
-  private addJobReference(doc: jsPDF, config: TemplateConfig, metadata: CoverLetterData['metadata'], startY: number): number {
-    if (metadata.jobPosition) {
-      doc.setFont(config.font.family, 'bold');
-      const jobRef = `JOB REFERENCE: ${metadata.jobPosition.toUpperCase()}`;
-      doc.text(jobRef, config.margins.left, startY);
-      doc.setFont(config.font.family, 'normal');
-      return startY + 15;
-    }
-
-    return startY + 5;
-  }
-
-  /**
-   * Adds greeting line
-   */
-  private addGreeting(doc: jsPDF, config: TemplateConfig, metadata: CoverLetterData['metadata'], startY: number): number {
-    const greeting = metadata.hiringManager ? `Dear ${metadata.hiringManager},` : 'Dear Hiring Manager,';
-    doc.text(greeting, config.margins.left, startY);
-    return startY + 10;
-  }
 
   /**
    * Adds the main cover letter content with proper formatting
@@ -249,39 +199,7 @@ export class PDFTemplateService {
     return currentY;
   }
 
-  /**
-   * Adds professional closing and signature
-   */
-  private addClosing(doc: jsPDF, config: TemplateConfig, startY: number): void {
-    let closingY = startY + 15;
 
-    // Ensure closing is not too close to bottom
-    if (closingY > config.pageSize.height - config.margins.bottom - 50) {
-      doc.addPage();
-      closingY = config.margins.top + 20;
-    }
-
-    // Add "Sincerely," 
-    doc.text('Sincerely,', config.margins.left, closingY);
-
-    // Add space for handwritten signature
-    const signatureY = closingY + 20;
-
-    // Add printed name
-    doc.text(config.applicantName, config.margins.left, signatureY);
-
-    // Add italic signature (simulated handwriting style)
-    doc.setFont(config.font.family, 'italic');
-    doc.setFontSize(config.font.size + 2);
-    const signatureName = config.applicantName.split(' ').map(name =>
-      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-    ).join(' ');
-    doc.text(signatureName, config.margins.left, signatureY - 8);
-
-    // Reset font
-    doc.setFont(config.font.family, 'normal');
-    doc.setFontSize(config.font.size);
-  }
 
   /**
    * Cleans generated content by removing only duplicate template elements, preserving greetings and closings

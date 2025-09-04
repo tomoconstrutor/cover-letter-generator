@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 
-const API_KEY_STORAGE_KEY = 'openai_api_key';
-
 /**
  * Custom hook for managing OpenAI API key
  * Always uses the hardcoded API key from environment variable
