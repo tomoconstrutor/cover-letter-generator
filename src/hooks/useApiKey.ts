@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 /**
  * Custom hook for managing OpenAI API key
  * Always uses the hardcoded API key from environment variable
