@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import type { CoverLetterData, PDFConfig } from '../types';
 import { DEFAULT_PDF_CONFIG } from '../types';
-import { PDFTemplateService, type TemplateConfig } from './pdfTemplate';
+import { type TemplateConfig } from './pdfTemplate';
 import { getTemplateService } from './templateInitializer';
 
 /**

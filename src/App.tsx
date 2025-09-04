@@ -18,7 +18,7 @@ import type {
   RegenerateHandler,
   DownloadHandler
 } from './types';
-import { DEFAULT_APP_STATE, ErrorType, Language } from './types';
+import { DEFAULT_APP_STATE, Language } from './types';
 
 /**
  * Main App Component
@@ -26,7 +26,7 @@ import { DEFAULT_APP_STATE, ErrorType, Language } from './types';
  */
 function App() {
   // API key management
-  const { apiKey, isConfigured } = useApiKey();
+  const { apiKey } = useApiKey();
   
   // Error handling
   const [errorState, errorActions] = useErrorHandler({
