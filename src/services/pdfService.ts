@@ -20,17 +20,19 @@ export class PDFService {
    * @param coverLetterData - The cover letter content and metadata
    * @param customConfig - Optional custom PDF configuration
    * @param language - Optional language for date formatting
+   * @param openToRelocate - Optional flag to show relocation text
    * @returns Promise<void> - Triggers download automatically
    */
   async generatePDF(
     coverLetterData: CoverLetterData,
     customConfig?: Partial<PDFConfig>,
-    language?: string
+    language?: string,
+    openToRelocate?: boolean
   ): Promise<void> {
     try {
       // Use the configured professional template service
       const templateService = getTemplateService();
-      await templateService.generatePDF(coverLetterData, customConfig as Partial<TemplateConfig>, language);
+      await templateService.generatePDF(coverLetterData, customConfig as Partial<TemplateConfig>, language, openToRelocate);
     } catch (error) {
       console.error('PDF generation failed:', error);
       throw new Error('Failed to generate PDF. Please try again.');

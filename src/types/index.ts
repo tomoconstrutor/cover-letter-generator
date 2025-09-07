@@ -22,6 +22,7 @@ export interface CoverLetterRequest {
   language?: Language; // optional, defaults to English
   currentLetterContent?: string; // optional, used when regenerating from existing letter
   useCurrentLetter?: boolean; // optional, flag to use current letter as base
+  openToRelocate?: boolean; // optional, flag to show relocation text in PDF
 }
 
 /**
@@ -36,6 +37,7 @@ export interface AppState {
   jobPosition: string;
   company: string;
   language: Language;
+  openToRelocate: boolean;
   
   // Generated content and UI state
   generatedLetters: CoverLetterData[];
@@ -64,6 +66,7 @@ export interface CoverLetterData {
     location?: string;
     generatedAt: Date;
     additionalContext?: string; // context used for regeneration
+    openToRelocate?: boolean; // flag for relocation text in PDF
   };
 }
 
@@ -183,7 +186,8 @@ export type FormFieldName =
   | 'location'
   | 'jobPosition'
   | 'company'
-  | 'language';
+  | 'language'
+  | 'openToRelocate';
 
 /**
  * Loading states for different operations
@@ -275,6 +279,7 @@ export const DEFAULT_APP_STATE: AppState = {
   jobPosition: '',
   company: '',
   language: Language.ENGLISH,
+  openToRelocate: false,
   generatedLetters: [],
   selectedLetterId: null,
   isLoading: false,

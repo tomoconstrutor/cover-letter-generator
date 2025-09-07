@@ -76,7 +76,8 @@ function App() {
       location: formData.location || '',
       jobPosition: formData.jobPosition || '',
       company: formData.company || '',
-      language: formData.language || Language.ENGLISH
+      language: formData.language || Language.ENGLISH,
+      openToRelocate: formData.openToRelocate || false
     }));
 
     const result = await errorActions.withErrorHandling(async () => {
@@ -100,7 +101,8 @@ function App() {
           company: formData.company,
           hiringManager: formData.hiringManager,
           location: formData.location,
-          generatedAt: new Date()
+          generatedAt: new Date(),
+          openToRelocate: formData.openToRelocate
         }
       };
 
@@ -126,6 +128,7 @@ function App() {
       jobPosition: appState.jobPosition,
       company: appState.company,
       language: appState.language,
+      openToRelocate: appState.openToRelocate,
       additionalContext,
       useCurrentLetter,
       currentLetterContent: useCurrentLetter ? selectedLetter?.content : undefined
@@ -162,7 +165,8 @@ function App() {
           hiringManager: formData.hiringManager,
           location: formData.location,
           generatedAt: new Date(),
-          additionalContext
+          additionalContext,
+          openToRelocate: formData.openToRelocate
         }
       };
 
@@ -172,7 +176,7 @@ function App() {
         selectedLetterId: newLetter.id
       }));
     }
-  }, [appState.jobDescription, appState.hiringManager, appState.location, appState.jobPosition, appState.company, appState.language, appState.generatedLetters, appState.selectedLetterId, errorActions]);
+  }, [appState.jobDescription, appState.hiringManager, appState.location, appState.jobPosition, appState.company, appState.language, appState.openToRelocate, appState.generatedLetters, appState.selectedLetterId, errorActions]);
 
   /**
    * Handle PDF download with retry logic
@@ -183,7 +187,7 @@ function App() {
 
     await errorActions.withErrorHandling(async () => {
       await withRetry(
-        () => pdfService.generatePDF(letter, undefined, appState.language),
+        () => pdfService.generatePDF(letter, undefined, appState.language, letter.metadata.openToRelocate),
         'PDF generation'
       );
     });
@@ -256,7 +260,8 @@ function App() {
     location: appState.location,
     jobPosition: appState.jobPosition,
     company: appState.company,
-    language: appState.language
+    language: appState.language,
+    openToRelocate: appState.openToRelocate
   });
 
   return (

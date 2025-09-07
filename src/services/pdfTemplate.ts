@@ -55,7 +55,8 @@ export class PDFTemplateService {
   async generatePDF(
     coverLetterData: CoverLetterData,
     customConfig?: Partial<TemplateConfig>,
-    language?: string
+    language?: string,
+    openToRelocate?: boolean
   ): Promise<void> {
     try {
       const config = customConfig ? { ...this.config, ...customConfig } : this.config;
@@ -70,7 +71,7 @@ export class PDFTemplateService {
       const contentWidth = config.pageSize.width - config.margins.left - config.margins.right;
 
       // Add all template sections
-      let currentY = this.addHeader(doc, config, coverLetterData.metadata, language);
+      let currentY = this.addHeader(doc, config, coverLetterData.metadata, language, openToRelocate);
       currentY = this.addDate(doc, config, coverLetterData.metadata.generatedAt, currentY, language);
       // Skip recipient info, job reference, greeting, and closing - just content
       this.addCoverLetterContent(doc, config, coverLetterData.content, currentY, contentWidth);
@@ -88,7 +89,7 @@ export class PDFTemplateService {
   /**
    * Creates professional header with name, title, and contact info
    */
-  private addHeader(doc: jsPDF, config: TemplateConfig, metadata: CoverLetterData['metadata'], language?: string): number {
+  private addHeader(doc: jsPDF, config: TemplateConfig, metadata: CoverLetterData['metadata'], language?: string, openToRelocate?: boolean): number {
     const headerY = config.margins.top;
 
     // Applicant name (large, bold, uppercase)
@@ -122,10 +123,17 @@ export class PDFTemplateService {
     const websiteWidth = doc.getTextWidth(config.contactInfo.website);
     doc.text(config.contactInfo.website, rightMargin - websiteWidth, websiteY);
 
-    // Address (language-dependent)
+    // Address (language-dependent with optional relocation text)
     const addressY = websiteY + 4;
     const isPortuguese = language === 'portuguese';
-    const address = isPortuguese ? 'Lisboa' : 'Lisbon (Open to relocate)';
+    let address: string;
+    
+    if (openToRelocate) {
+      address = isPortuguese ? 'Lisboa (Disponível para mudança)' : 'Lisbon (Open to relocate)';
+    } else {
+      address = isPortuguese ? 'Lisboa' : 'Lisbon';
+    }
+    
     const addressWidth = doc.getTextWidth(address);
     doc.text(address, rightMargin - addressWidth, addressY);
 
